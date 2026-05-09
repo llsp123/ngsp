@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>南瓜视频APP下载永久地址发布页-收藏我回家不迷路</title>
+    <link rel="shortcut icon" href="icon/66dc034d39c9b.png">
+    <link rel="stylesheet" type="text/css" href="css/font_4702346_8kqc9jzode8.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <style>
+        /* 保留原有样式 + 微信遮罩 + 弹窗样式整合 */
+        .wechat-qq-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 80px;
+            box-sizing: border-box;
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .simple-arrow {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 42px;
+            color: #ffaa00;
+            font-weight: bold;
+        }
+        .wechat-qq-mask p {
+            margin: 12px 0;
+        }
+        .wechat-qq-mask .action-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff7f02;
+            margin: 16px 0 8px;
+        }
+        .wechat-qq-mask .dot-icon {
+            display: inline-block;
+            border: 1px solid #ccc;
+            padding: 2px 12px;
+            border-radius: 30px;
+            background: #fff;
+            color: #333;
+            margin: 0 4px;
+            font-size: 16px;
+        }
+        .install-help-fab {
+            position: fixed;
+            right: 18px;
+            bottom: 26px;
+            z-index: 99990;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #ff9a2f, #ff7f02);
+            color: #fff;
+            padding: 12px 18px;
+            box-shadow: 0 10px 30px rgba(255, 127, 2, 0.35);
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .install-help-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 99991;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.55);
+        }
+        .install-help-modal.show {
+            display: flex;
+        }
+        .install-help-dialog {
+            width: 100%;
+            max-width: 720px;
+            max-height: 85vh;
+            overflow: hidden;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+        }
+        .install-help-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 20px 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .install-help-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .install-help-header p {
+            margin: 6px 0 0;
+            color: #999;
+            font-size: 13px;
+        }
+        .install-help-close {
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 50%;
+            background: #f7f7f7;
+            color: #666;
+            font-size: 22px;
+            line-height: 34px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .install-help-body {
+            padding: 18px 20px 22px;
+            max-height: calc(85vh - 78px);
+            overflow-y: auto;
+        }
+        .install-help-alert {
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #fff6ee;
+            color: #7a4b11;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .install-help-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .install-help-tab {
+            border: 1px solid #ffd1a6;
+            background: #fff;
+            color: #ff7f02;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .install-help-tab.active {
+            background: #ff7f02;
+            border-color: #ff7f02;
+            color: #fff;
+        }
+        .install-help-panel {
+            display: none;
+        }
+        .install-help-panel.active {
+            display: block;
+        }
+        .install-help-panel h4 {
+            margin: 0 0 10px;
+            color: #333;
+            font-size: 16px;
+        }
+        .install-help-panel ol {
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+        .install-help-panel li {
+            margin-bottom: 8px;
+        }
+        @media (max-width: 500px) {
+            .install-help-fab {
+                right: 12px;
+                bottom: 18px;
+                padding: 11px 16px;
+                font-size: 14px;
+            }
+            .install-help-dialog {
+                border-radius: 14px;
+            }
+            .install-help-header {
+                padding: 16px 16px 12px;
+            }
+            .install-help-body {
+                padding: 16px;
+            }
+        }
+        /* 原有样式补充 */
+        .c_black { color: #333; }
+        .small-img { display: inline-block; width: 18px; height: 18px; vertical-align: middle; background-size: contain; background-repeat: no-repeat; }
+        .icon_ios_shared { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff7f02"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.05 4.11c-.05.23-.09.46-.09.7 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/></svg>'); }
+        .icon_android_share { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff7f02"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.05 4.11c-.05.23-.09.46-.09.7 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/></svg>'); }
+        .icon_hand { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff7f02"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.05 4.11c-.05.23-.09.46-.09.7 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/></svg>'); background-size: 20px; }
+        .icon { display: inline-block; width: 20px; height: 20px; background-size: contain; background-repeat: no-repeat; vertical-align: middle; }
+    </style>
+</head>
+<body>
+<div id="main">
+    <div class="brand" id="logo">
+        <span id="appNameSpan">南瓜视频</span>
+        <span class="flag" id="topTitleSpan">APP下载</span>
+    </div>
+    <div class="field">
+        <h4 class="title" id="downloadTitleSpan">🚀APP下载</h4>
+        <div class="enter-maomi">
+            <div class="enter-icon"><div class="icon icon_hand"></div></div>
+            <div class="enter-link"><a href="#" id="androidLink" target="_blank"><span class="c_orange"><strong id="androidTipsSpan">安卓APP下载</strong></span></a></div>
+            <div class="enter-speed"><div class="iconfont icon-anzhuo"></div></div>
+        </div>
+        <div class="enter-maomi">
+            <div class="enter-icon"><div class="icon icon_hand"></div></div>
+            <div class="enter-link"><a href="#" id="iosLink" target="_blank"><span class="c_orange"><strong id="iosTipsSpan">暂无苹果</strong></span></a></div>
+            <div class="enter-speed"><div class="iconfont icon-iconfontapple"></div></div>
+        </div>
+    </div>
+    <div class="field" id="mailField">
+        <h4 class="title">✉️ 联络邮件</h4>
+        <ul><li><a href="#" id="mailLink"><font color='#ff7f02'><strong><u id="mailTextSpan">123456@qq.com</u></strong></font></a></li></ul>
+        <ul><li><a id="mailTipsSpan">希望大家能学会发送邮件获取新地址</a></li></ul>
+    </div>
+    <div class="field">
+        <h4 class="title">✈️ 记住永久下载网址</h4>
+        <ul>
+            <li><font color='#ff7f02'><strong>主网址：</strong></font><a href="#" id="primaryLink" target="_blank"><font color='#ff7f02'><strong><u id="primarySpan">nanguasp.com</u></strong></font></a></li>
+            <li><font color='#ff7f02'><strong>备网址：</strong></font><a href="#" id="alternateLink" target="_blank"><font color='#ff7f02'><strong><u id="alternateSpan">nanguasp.com</u></strong></font></a></li>
+        </ul>
+    </div>
+    <div class="field desc">
+        <h4 class="title">✏️ 溫馨提示</h4>
+        <ul>
+            <li>* 推荐使用 谷歌(Chrome)浏览器 访问本站，谷歌浏览器速度更快，iPhone建议使用手机自带 Safria浏览器 访问。</li>
+            <li>* 如果您记不住本站域名，请收藏该页地址，收藏并分享给好朋友。</li>
+            <p class="c_black">1、使用电脑的用户，请按键盘上的<a id="favorite"><font color='#ff7f02'><strong> <u>Ctrl+D</u> </strong></font></a>进行收藏</p>
+            <p class="c_black">2、苹果手机用户在浏览器点击<span class="icon icon_ios_shared small-img"></span>，然后添加到个人收藏或主屏幕。</p>
+            <p class="c_black">3、安卓手机用户点击<span class="icon icon_android_share small-img"></span>，或者打开浏览器设置，添加到书签或主屏幕。</p>
+        </ul>
+    </div>
+</div>
+<button type="button" class="install-help-fab" id="installHelpFab">无法安装？</button>
+<div class="install-help-modal" id="installHelpModal">
+    <div class="install-help-dialog">
+        <div class="install-help-header">
+            <div><h3 id="installHelpTitle">联网安装教程</h3><p>不同品牌手机的安装入口略有差异，点击标签查看对应说明。</p></div>
+            <button type="button" class="install-help-close" id="installHelpClose">×</button>
+        </div>
+        <div class="install-help-body">
+            <div class="install-help-alert">如果系统提示应用存在风险、被拦截或无法直接安装，可以先下载 APK，再按下面对应机型的步骤开启安装权限后继续安装。</div>
+            <div class="install-help-tabs">
+                <button type="button" class="install-help-tab active" data-target="panel-general">通用方法</button>
+                <button type="button" class="install-help-tab" data-target="panel-huawei">华为</button>
+                <button type="button" class="install-help-tab" data-target="panel-xiaomi">小米</button>
+                <button type="button" class="install-help-tab" data-target="panel-oppo">OPPO/realme</button>
+                <button type="button" class="install-help-tab" data-target="panel-vivo">vivo</button>
+                <button type="button" class="install-help-tab" data-target="panel-samsung">三星</button>
+            </div>
+            <div class="install-help-panel active" id="panel-general"><h4 id="generalAppName">南瓜视频 通用安装方法</h4><ol><li>先点击页面上的安卓下载按钮，完成 APK 文件下载。</li><li>若浏览器或系统提示无法安装，请进入系统设置，找到“安装未知应用”或“允许此来源安装应用”。</li><li>给当前下载工具或文件管理器开启安装权限后，重新点击 APK 文件继续安装。</li><li>安装完成后返回桌面打开 <span id="generalAppSpan">南瓜视频</span>，即可正常使用。</li></ol></div>
+            <div class="install-help-panel" id="panel-huawei"><h4>华为手机安装说明</h4><ol><li>打开“设置 > 安全 > 更多安全设置 > 安装外部来源应用”。</li><li>找到你刚才下载 APK 使用的浏览器或“文件管理”。</li><li>开启“允许安装应用”后，返回下载目录重新安装。</li><li>若仍提示风险，可在安装页选择继续安装或忽略提醒。</li></ol></div>
+            <div class="install-help-panel" id="panel-xiaomi"><h4>小米手机安装说明</h4><ol><li>打开“设置 > 隐私保护 > 特殊权限设置 > 安装未知应用”。</li><li>选择当前浏览器、下载器或“文件管理”。</li><li>开启“允许来自此来源的应用”后，再次点击 APK 安装。</li><li>如果出现安全扫描，按页面提示继续安装即可。</li></ol></div>
+            <div class="install-help-panel" id="panel-oppo"><h4>OPPO / realme 安装说明</h4><ol><li>进入“设置 > 安全 > 安装外部来源应用”或“特殊应用权限”。</li><li>选择当前下载 APK 的浏览器、应用市场替代工具或文件管理器。</li><li>开启安装权限后，返回文件管理重新打开 APK 文件。</li><li>如出现拦截提醒，点击继续安装或仍然安装即可。</li></ol></div>
+            <div class="install-help-panel" id="panel-vivo"><h4>vivo 手机安装说明</h4><ol><li>打开“设置 > 安全与隐私 > 更多安全设置 > 安装未知应用”。</li><li>找到浏览器或文件管理，开启对应安装权限。</li><li>返回下载列表，重新点击 APK 文件开始安装。</li><li>如果系统弹出风险提示，确认来源无误后继续安装。</li></ol></div>
+            <div class="install-help-panel" id="panel-samsung"><h4>三星手机安装说明</h4><ol><li>进入“设置 > 生物识别和安全性 > 安装未知应用”。</li><li>选择下载 APK 的浏览器或“我的文件”。</li><li>打开“允许此来源”后，回到下载目录重新安装 APK。</li><li>安装成功后即可在桌面打开 <span id="samsungAppSpan">南瓜视频</span>。</li></ol></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================= 配置 =======================
+    var APP_VARS = {
+        shareRedirect: 'http://43.240.156.232:8891/api.php/development/share',
+        title: '南瓜视频APP下载永久地址发布页-收藏我回家不迷路',
+        app_name: '南瓜视频',
+        top_title: 'APP下载',
+        download_title: '🚀APP下载',
+        android_url: 'https://mfsp551.lanzouo.com/iNEPw32nnxkf',
+        android_tips: '安卓APP下载',
+        ios_url: '',
+        ios_tips: '暂无苹果',
+        mail_title: '✉️ 联络邮件',
+        mail_text: '123456@qq.com',
+        mail_tips: '希望大家能学会发送邮件获取新地址',
+        primary_address: 'nanguasp.com',
+        alternate_address: 'nanguasp.com',
+        bookmark_address: 'nanguasp.com'
+    };
+
+    // 处理可能的 share 参数跳转 (原 PHP 的 ?share 跳转)
+    (function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('share')) {
+            window.location.href = APP_VARS.shareRedirect;
+            return;
+        }
+    })();
+
+    // 动态填充页面所有变量内容
+    document.title = APP_VARS.title;
+    document.getElementById('appNameSpan').innerText = APP_VARS.app_name;
+    document.getElementById('topTitleSpan').innerText = APP_VARS.top_title;
+    document.getElementById('downloadTitleSpan').innerText = APP_VARS.download_title;
+    // 安卓下载
+    var androidLink = document.getElementById('androidLink');
+    androidLink.href = APP_VARS.android_url;
+    document.getElementById('androidTipsSpan').innerText = APP_VARS.android_tips;
+    // iOS下载
+    var iosLink = document.getElementById('iosLink');
+    if (APP_VARS.ios_url && APP_VARS.ios_url.trim() !== '') {
+        iosLink.href = APP_VARS.ios_url;
+        document.getElementById('iosTipsSpan').innerText = APP_VARS.ios_tips;
+    } else {
+        iosLink.href = 'javascript:void(0);';
+        document.getElementById('iosTipsSpan').innerText = APP_VARS.ios_tips;
+        iosLink.onclick = function(e) { e.preventDefault(); alert('苹果版本暂未提供，敬请期待'); };
+    }
+    // 邮件区域
+    var mailField = document.getElementById('mailField');
+    if (mailField) {
+        var mailTitle = mailField.querySelector('.title');
+        if (mailTitle) mailTitle.innerText = APP_VARS.mail_title;
+        var mailLink = document.getElementById('mailLink');
+        if (mailLink) mailLink.href = 'mailto:' + APP_VARS.mail_text;
+        var mailTextSpan = document.getElementById('mailTextSpan');
+        if (mailTextSpan) mailTextSpan.innerText = APP_VARS.mail_text;
+        var mailTipsSpan = document.getElementById('mailTipsSpan');
+        if (mailTipsSpan) mailTipsSpan.innerText = APP_VARS.mail_tips;
+    } else {
+        // 若DOM中没有 mailField，防止报错，动态创建处理可不做
+    }
+    // 主备网址
+    var primarySpan = document.getElementById('primarySpan');
+    var primaryLink = document.getElementById('primaryLink');
+    if (primarySpan) primarySpan.innerText = APP_VARS.primary_address;
+    if (primaryLink) primaryLink.href = 'http://' + APP_VARS.primary_address;
+    var alternateSpan = document.getElementById('alternateSpan');
+    var alternateLink = document.getElementById('alternateLink');
+    if (alternateSpan) alternateSpan.innerText = APP_VARS.alternate_address;
+    if (alternateLink) alternateLink.href = 'http://' + APP_VARS.alternate_address;
+
+    // 安装帮助弹窗中的动态名称替换
+    var generalAppName = document.getElementById('generalAppName');
+    if (generalAppName) generalAppName.innerHTML = APP_VARS.app_name + ' 通用安装方法';
+    var generalAppSpan = document.getElementById('generalAppSpan');
+    if (generalAppSpan) generalAppSpan.innerText = APP_VARS.app_name;
+    var samsungAppSpan = document.getElementById('samsungAppSpan');
+    if (samsungAppSpan) samsungAppSpan.innerText = APP_VARS.app_name;
+
+    // 收藏夹逻辑
+    document.getElementById('favorite') && document.getElementById('favorite').addEventListener('click', function(e) {
+        e.preventDefault();
+        var bookmarkUrl = 'http://' + APP_VARS.bookmark_address;
+        var bookmarkTitle = APP_VARS.app_name + '永久免费看发布页';
+        try {
+            if (window.external && 'addFavorite' in window.external) {
+                window.external.addFavorite(bookmarkUrl, bookmarkTitle);
+            } else if (window.sidebar && window.sidebar.addPanel) {
+                window.sidebar.addPanel(bookmarkTitle, bookmarkUrl, '');
+            } else {
+                alert('加入收藏失败，电脑端请使用 Ctrl+D 进行添加，手机端请手动添加一下！');
+            }
+        } catch (err) {
+            alert('加入收藏失败，电脑端请使用 Ctrl+D 进行添加，手机端请手动添加一下！');
+        }
+    });
+
+    // 自动下载 (原 auto_download 逻辑适配，无有效参数所以保持)
+    function auto_download() {
+        var d = "1";
+        if (d !== "1") return;
+        var issafariBrowser = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+        if (issafariBrowser) {
+            // 原逻辑 location = "" 无意义，跳过
+            if ("" !== "1") return;
+            setTimeout(function () {}, 3000);
+        }
+    }
+    auto_download();
+
+    // 微信/QQ 遮罩
+    (function() {
+        var ua = navigator.userAgent.toLowerCase();
+        var isWechat = ua.indexOf('micromessenger') !== -1;
+        var isQQ = ua.indexOf('qq') !== -1 && ua.indexOf('micromessenger') === -1;
+        if (isWechat || isQQ) {
+            var maskDiv = document.createElement('div');
+            maskDiv.className = 'wechat-qq-mask';
+            maskDiv.innerHTML = '<div class="simple-arrow">↗</div>' +
+                                '<div>' +
+                                '<p>检测到您在微信或QQ内打开</p>' +
+                                '<p>请点击右上角 <span class="dot-icon">...</span> 选择</p>' +
+                                '<p class="action-text">在浏览器中打开</p>' +
+                                '<p>以便正常访问下载页面</p>' +
+                                '</div>';
+            document.body.appendChild(maskDiv);
+            document.body.style.overflow = 'hidden';
+            maskDiv.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+        }
+    })();
+
+    // 防扒/禁用调试 (原 setInterval debugger 会无限调试阻塞，适度调整但保留原意但为了避免无限弹窗? 注意 setInterval debugger 会触发断点，现代浏览器可抑制，但保留原样)
+    window.onload = function() {
+        var msg = "别扒啦！";
+        document.onkeydown = function(e) {
+            var ev = window.event || arguments[0];
+            if (ev.keyCode == 123) { alert(msg); return false; }
+            else if ((ev.ctrlKey) && (ev.shiftKey) && (ev.keyCode == 73)) { alert(msg); return false; }
+            else if ((ev.ctrlKey) && (ev.keyCode == 85)) { alert(msg); return false; }
+            else if ((ev.ctrlKey) && (ev.keyCode == 83)) { alert(msg); return false; }
+        };
+        document.oncontextmenu = function() { alert(msg); return false; };
+    };
+    // 注意：原样保留了无限debugger可能会影响性能，但鉴于转换完整性，保留setInterval debugger：
+    var debugInterval = setInterval(function() { debugger; }, 50);
+    // 允许在一定条件下清理? 原代码无清理，保持。为防止极端情况可在控制台观察，不做额外处理。
+    // 但为了用户不卡死，通过setTimeout可选择性解除（但尊重原始体验，保留）
+
+    // ======================= 安装帮助弹窗交互 (重构为标准事件) =======================
+    (function() {
+        var fab = document.getElementById('installHelpFab');
+        var modal = document.getElementById('installHelpModal');
+        var closeBtn = document.getElementById('installHelpClose');
+        var tabs = document.querySelectorAll('.install-help-tab');
+        var panels = document.querySelectorAll('.install-help-panel');
+
+        if (!fab || !modal || !closeBtn) return;
+
+        function openModal() {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        function switchPanel(targetId) {
+            tabs.forEach(function(tab) { tab.classList.remove('active'); });
+            panels.forEach(function(panel) { panel.classList.remove('active'); });
+            var activeTab = document.querySelector('.install-help-tab[data-target="' + targetId + '"]');
+            var activePanel = document.getElementById(targetId);
+            if (activeTab) activeTab.classList.add('active');
+            if (activePanel) activePanel.classList.add('active');
+        }
+        fab.onclick = openModal;
+        closeBtn.onclick = closeModal;
+        modal.onclick = function(e) { if (e.target === modal) closeModal(); };
+        document.addEventListener('keydown', function(e) {
+            if (modal.classList.contains('show') && e.keyCode === 27) closeModal();
+        });
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].onclick = (function(tab) {
+                return function() { switchPanel(tab.getAttribute('data-target')); };
+            })(tabs[i]);
+        }
+    })();
+</script>
+</body>
+</html>
