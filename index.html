@@ -9,7 +9,32 @@
     <link rel="stylesheet" type="text/css" href="css/font_4702346_8kqc9jzode8.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script src="http://www.nanguasp.com/js/config.js"></script>
+    <script>
+    (function() {
+        var remoteUrl = 'http://www.nanguasp.com/js/config.js';  // 替换为真实远程地址
+        var localUrl = 'js/config.js';
+
+        function loadScript(url, onSuccess, onError) {
+            var s = document.createElement('script');
+            s.src = url;
+            s.onload = onSuccess;
+            s.onerror = onError;
+            document.head.appendChild(s);
+        }
+
+        loadScript(remoteUrl, function() {
+            console.log('远程配置加载成功');
+            document.dispatchEvent(new CustomEvent('configReady'));
+        }, function() {
+            console.warn('远程失败，使用本地');
+            loadScript(localUrl, function() {
+                document.dispatchEvent(new CustomEvent('configReady'));
+            }, function() {
+                console.error('本地配置也失败');
+            });
+        });
+    })();
+    </script>
     <style>
         .wechat-qq-mask {
             position: fixed;
@@ -275,36 +300,50 @@
     </div>
 </div>
 <script>
-    if (window.APP_VARS) {
-        var vars = APP_VARS;
-        document.getElementById('appNameSpan').innerText = vars.app_name;
-        document.getElementById('topTitleSpan').innerText = vars.top_title;
-        document.getElementById('downloadTitleSpan').innerText = vars.download_title;
+// ======================= 页面初始化函数（原所有逻辑完整迁移） =======================
+function initPage() {
+    var vars = window.APP_VARS;
+    if (!vars) {
+        console.warn('APP_VARS 未就绪，重试');
+        setTimeout(initPage, 50);
+        return;
+    }
 
-        // 安卓下载
-        var androidLink = document.getElementById('androidLink');
-        androidLink.href = vars.android_url;
-        document.getElementById('androidTipsSpan').innerText = vars.android_tips;
-
-        // iOS下载
-        var iosLink = document.getElementById('iosLink');
-        if (vars.ios_url && vars.ios_url.trim() !== '') {
-            iosLink.href = vars.ios_url;
-            document.getElementById('iosTipsSpan').innerText = vars.ios_tips;
-        } else {
-            iosLink.href = 'javascript:void(0);';
-            document.getElementById('iosTipsSpan').innerText = vars.ios_tips;
-            iosLink.onclick = function(e) { e.preventDefault(); alert('苹果版本暂未提供，敬请期待'); };
+    // 处理 share 跳转
+    (function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('share') && vars.shareRedirect) {
+            window.location.href = vars.shareRedirect;
+            return;
         }
+    })();
 
-        // 邮件区域：若配置为空则隐藏
-        var mailField = document.getElementById('mailField');
-        if (mailField && (!vars.mail_title && !vars.mail_text)) {
-            mailField.style.display = 'none';
-        } else {
-            // 有内容时显示并填充（此处保留扩展）
-            if (mailField) mailField.style.display = '';
-            var mailTitle = mailField && mailField.querySelector('.title');
+    // 动态填充页面所有变量内容
+    document.title = vars.title;
+    document.getElementById('appNameSpan').innerText = vars.app_name;
+    document.getElementById('topTitleSpan').innerText = vars.top_title;
+    document.getElementById('downloadTitleSpan').innerText = vars.download_title;
+    // 安卓下载
+    var androidLink = document.getElementById('androidLink');
+    androidLink.href = vars.android_url;
+    document.getElementById('androidTipsSpan').innerText = vars.android_tips;
+    // iOS下载
+    var iosLink = document.getElementById('iosLink');
+    if (vars.ios_url && vars.ios_url.trim() !== '') {
+        iosLink.href = vars.ios_url;
+        document.getElementById('iosTipsSpan').innerText = vars.ios_tips;
+    } else {
+        iosLink.href = 'javascript:void(0);';
+        document.getElementById('iosTipsSpan').innerText = vars.ios_tips;
+        iosLink.onclick = function(e) { e.preventDefault(); alert('苹果版本暂未提供，敬请期待'); };
+    }
+    // 邮件区域
+    var mailField = document.getElementById('mailField');
+    if (mailField && (!vars.mail_title && !vars.mail_text)) {
+        mailField.style.display = 'none';
+    } else {
+        if (mailField) {
+            var mailTitle = mailField.querySelector('.title');
             if (mailTitle) mailTitle.innerText = vars.mail_title;
             var mailLink = document.getElementById('mailLink');
             if (mailLink) mailLink.href = 'mailto:' + vars.mail_text;
@@ -313,52 +352,49 @@
             var mailTipsSpan = document.getElementById('mailTipsSpan');
             if (mailTipsSpan) mailTipsSpan.innerText = vars.mail_tips;
         }
-
-        // 主备网址
-        var primarySpan = document.getElementById('primarySpan');
-        var primaryLink = document.getElementById('primaryLink');
-        if (primarySpan) primarySpan.innerText = vars.primary_address;
-        if (primaryLink) primaryLink.href = 'http://' + vars.primary_address;
-        var alternateSpan = document.getElementById('alternateSpan');
-        var alternateLink = document.getElementById('alternateLink');
-        if (alternateSpan) alternateSpan.innerText = vars.alternate_address;
-        if (alternateLink) alternateLink.href = 'http://' + vars.alternate_address;
-
-        // 安装帮助弹窗动态名称
-        var generalAppName = document.getElementById('generalAppName');
-        if (generalAppName) generalAppName.innerHTML = vars.app_name + ' 通用安装方法';
-        var generalAppSpan = document.getElementById('generalAppSpan');
-        if (generalAppSpan) generalAppSpan.innerText = vars.app_name;
-        var samsungAppSpan = document.getElementById('samsungAppSpan');
-        if (samsungAppSpan) samsungAppSpan.innerText = vars.app_name;
     }
-    var favoriteBtn = document.getElementById('favorite');
-    if (favoriteBtn) {
-        favoriteBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            var bookmarkUrl = 'http://' + (window.APP_VARS && APP_VARS.bookmark_address ? APP_VARS.bookmark_address : 'nanguasp.com');
-            var bookmarkTitle = (window.APP_VARS ? APP_VARS.app_name : '南瓜视频') + '永久免费看发布页';
-            try {
-                if (window.external && 'addFavorite' in window.external) {
-                    window.external.addFavorite(bookmarkUrl, bookmarkTitle);
-                } else if (window.sidebar && window.sidebar.addPanel) {
-                    window.sidebar.addPanel(bookmarkTitle, bookmarkUrl, '');
-                } else {
-                    alert('加入收藏失败，电脑端请使用 Ctrl+D 进行添加，手机端请手动添加一下！');
-                }
-            } catch (err) {
+    // 主备网址
+    var primarySpan = document.getElementById('primarySpan');
+    var primaryLink = document.getElementById('primaryLink');
+    if (primarySpan) primarySpan.innerText = vars.primary_address;
+    if (primaryLink) primaryLink.href = 'http://' + vars.primary_address;
+    var alternateSpan = document.getElementById('alternateSpan');
+    var alternateLink = document.getElementById('alternateLink');
+    if (alternateSpan) alternateSpan.innerText = vars.alternate_address;
+    if (alternateLink) alternateLink.href = 'http://' + vars.alternate_address;
+
+    // 安装帮助弹窗中的动态名称替换
+    var generalAppName = document.getElementById('generalAppName');
+    if (generalAppName) generalAppName.innerHTML = vars.app_name + ' 通用安装方法';
+    var generalAppSpan = document.getElementById('generalAppSpan');
+    if (generalAppSpan) generalAppSpan.innerText = vars.app_name;
+    var samsungAppSpan = document.getElementById('samsungAppSpan');
+    if (samsungAppSpan) samsungAppSpan.innerText = vars.app_name;
+
+    // 收藏夹逻辑
+    document.getElementById('favorite') && document.getElementById('favorite').addEventListener('click', function(e) {
+        e.preventDefault();
+        var bookmarkUrl = 'http://' + vars.bookmark_address;
+        var bookmarkTitle = vars.app_name + '永久免费看发布页';
+        try {
+            if (window.external && 'addFavorite' in window.external) {
+                window.external.addFavorite(bookmarkUrl, bookmarkTitle);
+            } else if (window.sidebar && window.sidebar.addPanel) {
+                window.sidebar.addPanel(bookmarkTitle, bookmarkUrl, '');
+            } else {
                 alert('加入收藏失败，电脑端请使用 Ctrl+D 进行添加，手机端请手动添加一下！');
             }
-        });
-    }
+        } catch (err) {
+            alert('加入收藏失败，电脑端请使用 Ctrl+D 进行添加，手机端请手动添加一下！');
+        }
+    });
 
-    // 自动下载 (原 auto_download 逻辑保留)
+    // 自动下载函数
     function auto_download() {
         var d = "1";
         if (d !== "1") return;
         var issafariBrowser = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
         if (issafariBrowser) {
-            // 原逻辑 location = "" 无意义, 保留框架
             if ("" !== "1") return;
             setTimeout(function () {}, 3000);
         }
@@ -385,6 +421,8 @@
             maskDiv.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
         }
     })();
+
+    // 防扒/禁用调试
     window.onload = function() {
         var msg = "别扒啦！";
         document.onkeydown = function(e) {
@@ -396,7 +434,10 @@
         };
         document.oncontextmenu = function() { alert(msg); return false; };
     };
+    // 无限 debugger 保护
     var debugInterval = setInterval(function() { debugger; }, 50);
+
+    // 安装帮助弹窗交互
     (function() {
         var fab = document.getElementById('installHelpFab');
         var modal = document.getElementById('installHelpModal');
@@ -434,6 +475,11 @@
             })(tabs[i]);
         }
     })();
+}
+
+// 等待配置加载完成
+document.addEventListener('configReady', initPage);
+if (window.APP_VARS) initPage(); // 同步回退
 </script>
 </body>
 </html>
